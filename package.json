@@ -1,0 +1,37 @@
+{
+  "name": "cinematic-github-stats",
+  "version": "1.0.0",
+  "description": "Premium GitHub Stats Generator using Remotion. Created by AshrafMorningstar.",
+  "author": "AshrafMorningstar <https://github.com/AshrafMorningstar>",
+  "homepage": "https://github.com/AshrafMorningstar",
+  "scripts": {
+    "start": "remotion preview src/index.ts",
+    "render": "remotion render src/index.ts StatsComposition out/stats.mp4",
+    "render:gif": "remotion render src/index.ts StatsComposition out/stats.gif --codec=gif",
+    "fetch": "tsx src/scripts/fetch-data.ts",
+    "test": "eslint src --ext ts,tsx"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "fraction.js": "^4.3.7",
+    "lodash": "^4.17.21",
+    "lucide-react": "^0.559.0",
+    "octokit": "^3.1.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "remotion": "latest",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@remotion/cli": "latest",
+    "@remotion/eslint-config": "latest",
+    "@types/lodash": "^4.14.202",
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.0",
+    "@types/web": "^0.0.136",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.4",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3"
+  }
+}
