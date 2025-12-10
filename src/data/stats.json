@@ -1,0 +1,15 @@
+{
+  "username": "AshrafMorningstar",
+  "name": "Ashraf Morningstar",
+  "totalCommits": 1250,
+  "totalPRs": 45,
+  "totalIssues": 32,
+  "totalContribs": 2500,
+  "repos": 28,
+  "stars": 150,
+  "languages": [
+    { "name": "TypeScript", "value": 60, "color": "#3178c6" },
+    { "name": "JavaScript", "value": 30, "color": "#f1e05a" },
+    { "name": "Python", "value": 10, "color": "#3572A5" }
+  ]
+}
