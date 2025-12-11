@@ -8,25 +8,41 @@ import {
   useVideoConfig,
   spring,
   interpolate,
+  Sequence,
 } from "remotion";
-import React from "react";
+import React, { useMemo } from "react";
 import stats from "../data/stats.json";
-import { GlassCard } from "../components/ui/GlassCard";
+import { HolographicCard } from "../components/ui/HolographicCard";
+import { NeonText } from "../components/ui/NeonText";
 import { ParticleBackground } from "../components/animations/ParticleBackground";
-import { Heatmap } from "../components/viz/Heatmap";
-import { LanguageRadar } from "../components/viz/LanguageRadar";
-import { defaultTheme } from "../config/themes";
+import { defaultTheme } from "../config/themes"; // Defaults to Holographic -> Cyberpunk
+import { RadarChart } from "../components/charts/RadarChart";
+import { ActivityGraph } from "../components/charts/ActivityGraph";
+
+// Transform language data for Radar Chart
+const radarData = (stats.languages || []).map((l) => ({
+  language: l.name,
+  value: l.value,
+}));
+
+// Mock data for Activity Graph (Contribution simulation)
+const activityData = Array.from(
+  { length: 20 },
+  (_, i) => Math.floor(Math.random() * 50) + 10 + Math.sin(i) * 10
+);
 
 const StatItem = ({
   title,
   value,
   delay,
   color,
+  width = 240,
 }: {
   title: string;
   value: string | number;
   delay: number;
   color: string;
+  width?: number;
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -34,7 +50,7 @@ const StatItem = ({
   const scale = spring({
     fps,
     frame: frame - delay,
-    config: { damping: 200 },
+    config: { damping: 12 },
   });
 
   const opacity = interpolate(frame - delay, [0, 20], [0, 1], {
@@ -43,41 +59,37 @@ const StatItem = ({
   });
 
   return (
-    <div style={{ transform: `scale(${scale})`, opacity, flex: 1 }}>
-      <GlassCard
+    <div style={{ transform: `scale(${scale})`, opacity }}>
+      <HolographicCard
+        width={width}
+        height={140}
+        color={color}
         style={{
-          borderColor: `rgba(${parseInt(color.slice(1, 3), 16)}, ${parseInt(
-            color.slice(3, 5),
-            16
-          )}, ${parseInt(color.slice(5, 7), 16)}, 0.3)`,
-          height: "100%",
-          padding: 15,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <h3
+        <NeonText
+          text={title}
+          size={14}
+          color={color}
+          glow={false}
           style={{
-            margin: 0,
-            color: defaultTheme.colors.textSecondary,
-            fontSize: 12,
-            fontWeight: 600,
+            opacity: 0.8,
             textTransform: "uppercase",
-            letterSpacing: "1px",
+            letterSpacing: "2px",
+            marginBottom: 10,
           }}
-        >
-          {title}
-        </h3>
-        <h1
-          style={{
-            margin: "5px 0 0",
-            color: color,
-            fontSize: 32,
-            fontWeight: 800,
-            filter: `drop-shadow(0 0 10px ${color}40)`,
-          }}
-        >
-          {value}
-        </h1>
-      </GlassCard>
+        />
+        <NeonText
+          text={value}
+          size={42}
+          color={color}
+          style={{ textShadow: `0 0 20px ${color}` }}
+        />
+      </HolographicCard>
     </div>
   );
 };
@@ -87,166 +99,168 @@ export const StatsScene: React.FC = () => {
   const { width, height } = useVideoConfig();
 
   // Gentle zoom out for background feel
-  const bgScale = interpolate(frame, [0, 300], [1, 1.1]);
+  const bgScale = interpolate(frame, [0, 300], [1, 1.2]);
+
+  // Title Animation
+  const titleOpacity = interpolate(frame, [0, 30], [0, 1]);
+  const titleY = interpolate(frame, [0, 30], [50, 0], {
+    extrapolateRight: "clamp",
+  });
 
   return (
     <AbsoluteFill
       style={{
         backgroundColor: defaultTheme.colors.background,
-        fontFamily: "'Outfit', 'Inter', sans-serif",
+        fontFamily: "'Orbitron', 'Inter', sans-serif",
         overflow: "hidden",
       }}
     >
-      <AbsoluteFill style={{ transform: `scale(${bgScale})` }}>
+      <AbsoluteFill style={{ transform: `scale(${bgScale})`, zIndex: 0 }}>
         <ParticleBackground theme={defaultTheme} />
       </AbsoluteFill>
 
-      {/* Main Container */}
-      <AbsoluteFill
-        style={{
-          padding: 60,
-          display: "flex",
-          flexDirection: "column",
-          gap: 30,
-          zIndex: 10,
-        }}
-      >
+      {/* Main Content Container */}
+      <AbsoluteFill style={{ padding: 40, zIndex: 10 }}>
         {/* Header Section */}
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            opacity: interpolate(frame, [0, 30], [0, 1]),
+            opacity: titleOpacity,
+            transform: `translateY(${titleY}px)`,
+            textAlign: "center",
+            marginBottom: 40,
           }}
         >
-          <div>
-            <h1
-              style={{
-                fontSize: 64,
-                fontWeight: 900,
-                margin: 0,
-                background: `linear-gradient(to right, #fff, ${defaultTheme.colors.textSecondary})`,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                filter: "drop-shadow(0 0 30px rgba(255,255,255,0.2))",
-              }}
-            >
-              {stats.name || stats.username}
-            </h1>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div
-                style={{
-                  width: 30,
-                  height: 3,
-                  background: defaultTheme.colors.primary,
-                }}
-              />
-              <p
-                style={{
-                  fontSize: 18,
-                  color: defaultTheme.colors.accent,
-                  letterSpacing: "0.2em",
-                  fontWeight: 600,
-                  margin: 0,
-                  textTransform: "uppercase",
-                }}
-              >
-                Premium GitHub Audit
-              </p>
-            </div>
-          </div>
-          <img
-            src={stats.avatar}
-            alt="Profile"
-            style={{
-              width: 80,
-              height: 80,
-              borderRadius: "50%",
-              border: `3px solid ${defaultTheme.colors.primary}`,
-              boxShadow: `0 0 20px ${defaultTheme.colors.primary}40`,
-            }}
+          <NeonText
+            text={stats.username}
+            size={64}
+            color={defaultTheme.colors.primary}
+            style={{ marginBottom: 10 }}
+          />
+          <NeonText
+            text="PREMIUM GITHUB ANALYTICS"
+            size={18}
+            color={defaultTheme.colors.secondary}
+            style={{ letterSpacing: "0.3em", opacity: 0.8 }}
+            glow={false}
           />
         </div>
 
-        {/* Bento Grid Layout */}
-        <div style={{ display: "flex", gap: 30, flex: 1 }}>
-          {/* Left Column: Heatmap & Key Stats */}
-          <div
-            style={{
-              flex: 2,
-              display: "flex",
-              flexDirection: "column",
-              gap: 30,
-            }}
-          >
-            <Heatmap weeks={stats.contributionCalendar.weeks} />
-
-            <div style={{ display: "flex", gap: 20 }}>
-              <StatItem
-                title="Total Commits"
-                value={stats.totalCommits}
-                delay={20}
-                color={defaultTheme.colors.primary}
-              />
-              <StatItem
-                title="Contributions"
-                value={stats.totalContribs}
-                delay={25}
-                color={defaultTheme.colors.success}
-              />
-              <StatItem
-                title="Repositories"
-                value={stats.repos}
-                delay={30}
-                color="#fcc419" // Gold
-              />
-            </div>
-            <div style={{ display: "flex", gap: 20 }}>
-              <StatItem
-                title="Pull Requests"
-                value={stats.totalPRs}
-                delay={35}
-                color={defaultTheme.colors.secondary}
-              />
-              <StatItem
-                title="Issues Solved"
-                value={stats.totalIssues}
-                delay={40}
-                color={defaultTheme.colors.accent}
-              />
-              <StatItem
-                title="Stars Earned"
-                value={stats.stars}
-                delay={45}
-                color="#fbbf24" // Amber
-              />
-            </div>
+        {/* Dashboard Grid */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: 30,
+            height: "100%",
+            alignContent: "start",
+          }}
+        >
+          {/* Left Column: Stats */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <StatItem
+              title="Commits"
+              value={stats.totalCommits}
+              delay={20}
+              color={defaultTheme.colors.primary}
+            />
+            <StatItem
+              title="PRs"
+              value={stats.totalPRs}
+              delay={25}
+              color={defaultTheme.colors.success}
+            />
+            <StatItem
+              title="Issues"
+              value={stats.totalIssues}
+              delay={30}
+              color={defaultTheme.colors.error}
+            />
           </div>
 
-          {/* Right Column: Radar Chart */}
-          <div style={{ flex: 1 }}>
-            <LanguageRadar languages={stats.topLanguages} />
+          {/* Center Column: Radar Chart */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              height: 480,
+            }}
+          >
+            <HolographicCard
+              width={400}
+              height={460}
+              color={defaultTheme.colors.secondary}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  top: 20,
+                  left: 0,
+                  right: 0,
+                  textAlign: "center",
+                }}
+              >
+                <NeonText
+                  text="TOP LANGUAGES"
+                  size={16}
+                  color={defaultTheme.colors.secondary}
+                />
+              </div>
+              <RadarChart
+                data={radarData}
+                width={300}
+                height={300}
+                color={defaultTheme.colors.secondary}
+              />
+            </HolographicCard>
+          </div>
+
+          {/* Right Column: Activity Graph & Extra Stats */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <StatItem
+              title="Contributions"
+              value={stats.totalContribs}
+              delay={35}
+              color={defaultTheme.colors.accent}
+            />
+
+            {/* Activity Graph Card */}
+            <div style={{ flex: 1 }}>
+              <HolographicCard
+                width={240}
+                height={280}
+                color={defaultTheme.colors.primary}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  paddingBottom: 0,
+                }}
+              >
+                <div style={{ marginBottom: 20 }}>
+                  <NeonText
+                    text="ACTIVITY"
+                    size={16}
+                    color={defaultTheme.colors.primary}
+                  />
+                </div>
+                <ActivityGraph
+                  data={activityData}
+                  width={200}
+                  height={150}
+                  color={defaultTheme.colors.primary}
+                />
+              </HolographicCard>
+            </div>
           </div>
         </div>
       </AbsoluteFill>
-
-      {/* Watermark */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 20,
-          width: "100%",
-          textAlign: "center",
-          color: "rgba(255,255,255,0.15)",
-          fontSize: 12,
-          fontFamily: "monospace",
-          letterSpacing: "2px",
-          textTransform: "uppercase",
-        }}
-      >
-        Designed by AshrafMorningstar
-      </div>
     </AbsoluteFill>
   );
 };
