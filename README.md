@@ -1,72 +1,93 @@
-# 🎬 Cinematic GitHub Stats - Premium Edition
+# 🎬 Cinematic GitHub Stats (Ultimate Edition)
 
-[![Render Video](https://github.com/AshrafMorningstar/cinematic-github-stats/actions/workflows/render.yml/badge.svg)](https://github.com/AshrafMorningstar/cinematic-github-stats/actions/workflows/render.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Remotion](https://img.shields.io/badge/Made%20with-Remotion-blue)](https://www.remotion.dev/)
+![Premium GitHub Stats](https://github.com/AshrafMorningstar/cinematic-github-stats/blob/main/out/stats.gif?raw=true)
 
-> **A fully automated, professional-grade cinematic video generator for GitHub statistics.**
+> **"The Best of Best"** - A premium, cinematic visualizer for your GitHub profile.
+> Created by **AshrafMorningstar**.
 
-Turn your GitHub activity into a stunning, high-quality animated video. Featuring glassmorphism UI, particle effects, and cinematic transitions.
+[![Render Cinematic Stats](https://github.com/AshrafMorningstar/cinematic-github-stats/actions/workflows/render.yml/badge.svg)](https://github.com/AshrafMorningstar/cinematic-github-stats/actions/workflows/render.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ---
 
-## ✨ Features
+## ✨ Premium Features (v2.0)
 
-### 🎨 **Premium Design**
+### 📊 Ultimate Dashboard
 
-- **Glassmorphism UI**: Beautiful frosted glass cards and elements.
-- **Particle System**: Deep, floating particle backgrounds that react to themes.
-- **Cinematic Transitions**: Smooth spring-based animations and camera movements.
-- **Themes**: Includes Professional, Neon, Dark, and Light presets.
+- **Bento-Grid Layout**: Modern, structured design for maximum information density.
+- **3D Heatmap**: Tilted, glowing visualization of your contribution calendar.
+- **Language Radar**: Animated hexagonal chart showcasing your top 5 technologies.
+- **Glassmorphism**: Frosted glass cards with dynamic borders and shadows.
 
-### 📊 **Comprehensive Stats**
+### 🎨 Cinematic Effects
 
-- **Contribution Graph**: Animated heatmap visualization.
-- **Language Breakdown**: Dynamic charts showing your top languages.
-- **Key Metrics**: Commits, PRs, Issues, and Stars highlighted with premium typography.
+- **Infinite 3D Floor**: Subtle perspective grid loop.
+- **Particle Nebula**: Interactive background with depth of field.
+- **Typewriter Reveal**: Smooth character-by-character text animation.
+- **Physics-Based Motion**: Spring animations for every element.
 
-### 🤖 **Zero-Config Automation**
+### 🤖 Full Automation
 
-- **Daily Updates**: GitHub Actions workflow runs daily to generate fresh videos.
-- **Auto-Fetch**: Automatically pulls your latest data via GitHub API.
-- **Instant Deploy**: Publishes the result directly to your repository or GitHub Pages.
+- **Daily Updates**: GitHub Actions pipeline runs daily to keep stats fresh.
+- **Zero Config**: Just fork, add token (optional), and enable Actions.
 
 ---
 
 ## 🚀 Quick Start
 
-### Option 1: One-Click Setup (Recommended)
+### Option 1: Use the Template (Easiest)
 
-1. **Fork** this repository.
-2. Go to **Settings** > **Secrets and variables** > **Actions**.
-3. Add a secret `GH_TOKEN` with your GitHub Personal Access Token (read permissions).
-4. Enable **GitHub Actions** in the Actions tab.
-5. Manually trigger the **Render Video** workflow or wait for the daily scheduler.
+1.  **Fork** this repository.
+2.  Go to **Settings > Actions > General** and select **"Read and write permissions"**.
+3.  Go to **Actions** tab, select **"Render Cinematic Stats"**, and click **Run workflow**.
+4.  Wait for the run to complete. Your new GIF is in `out/stats.gif`.
 
-### Option 2: Run Locally
+### Option 2: Local Development
 
 ```bash
-# Clone the repo
+# Clone
 git clone https://github.com/AshrafMorningstar/cinematic-github-stats.git
+cd cinematic-github-stats
 
-# Install dependencies
+# Install
 npm install
 
-# Run preview studio
+# Fetch Your Data
+npm run fetch
+
+# Preview Studio
 npm start
+
+# Render Video
+npm run render:gif
 ```
 
 ---
 
 ## 🛠 Configuration
 
-You can customize the video generation by modifying `src/config/constants.ts` or setting environment variables.
+### Environment Variables
 
-| Variable   | Description                                    | Default        |
-| ---------- | ---------------------------------------------- | -------------- |
-| `THEME`    | Visual theme (professional, neon, dark, light) | `professional` |
-| `DURATION` | Video duration in seconds                      | `30`           |
-| `FPS`      | Frames per second                              | `30`           |
+To fetch private stats or avoid rate limits, create a `.env` file:
+
+```env
+GH_TOKEN=your_github_personal_access_token
+```
+
+### Customization
+
+Edit `src/config/themes.ts` to change colors:
+
+```typescript
+export const defaultTheme = {
+  colors: {
+    primary: "#3b82f6", // Blue
+    secondary: "#ec4899", // Pink
+    accent: "#8b5cf6", // Purple
+    // ...
+  },
+};
+```
 
 ---
 
@@ -74,25 +95,23 @@ You can customize the video generation by modifying `src/config/constants.ts` or
 
 ```
 src/
+├── Scenes/           # Main composition layouts
 ├── components/
-│   ├── animations/  # Particle systems, typewriters
-│   ├── scenes/      # Main video scenes (Intro, Stats, etc.)
-│   └── ui/          # Reusable Glassmorphism components
-├── config/          # Themes and constants
-├── data/            # Data fetchers and mock data
-└── scenes/          # Remotion sequences
+│   ├── viz/          # Data visualizations (Heatmap, Radar)
+│   ├── ui/           # UI elements (GlassCard)
+│   └── animations/   # Background effects
+├── scripts/          # Data fetching logic
+└── config/           # Theme and settings
 ```
 
 ---
 
-## 👤 Author
+## 📜 License
 
-**Ashraf Morningstar**
-
-- GitHub: [@AshrafMorningstar](https://github.com/AshrafMorningstar)
+MIT © [AshrafMorningstar](https://github.com/AshrafMorningstar)
 
 ---
 
 <p align="center">
-  Generated by <a href="https://github.com/AshrafMorningstar/cinematic-github-stats">Cinematic GitHub Stats</a>
+  <sub>Built with Remotion, React, and Passion by AshrafMorningstar.</sub>
 </p>
