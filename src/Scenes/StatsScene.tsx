@@ -8,41 +8,37 @@ import {
   useVideoConfig,
   spring,
   interpolate,
-  Sequence,
 } from "remotion";
-import React, { useMemo } from "react";
+import React from "react";
 import stats from "../data/stats.json";
 import { HolographicCard } from "../components/ui/HolographicCard";
 import { NeonText } from "../components/ui/NeonText";
 import { ParticleBackground } from "../components/animations/ParticleBackground";
-import { defaultTheme } from "../config/themes"; // Defaults to Holographic -> Cyberpunk
+import { defaultTheme } from "../config/themes";
 import { RadarChart } from "../components/charts/RadarChart";
-import { ActivityGraph } from "../components/charts/ActivityGraph";
+import { Heatmap } from "../components/charts/Heatmap";
 
 // Transform language data for Radar Chart
-const radarData = (stats.languages || []).map((l) => ({
+// Use topLanguages or fallback to languages
+const langSource =
+  (stats as any).topLanguages || (stats as any).languages || [];
+const radarData = langSource.slice(0, 5).map((l: any) => ({
   language: l.name,
-  value: l.value,
+  value: l.value || l.size || 0,
 }));
 
-// Mock data for Activity Graph (Contribution simulation)
-const activityData = Array.from(
-  { length: 20 },
-  (_, i) => Math.floor(Math.random() * 50) + 10 + Math.sin(i) * 10
-);
-
-const StatItem = ({
+const StatBox = ({
   title,
   value,
   delay,
   color,
-  width = 240,
+  style,
 }: {
   title: string;
   value: string | number;
   delay: number;
   color: string;
-  width?: number;
+  style?: React.CSSProperties;
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -50,7 +46,7 @@ const StatItem = ({
   const scale = spring({
     fps,
     frame: frame - delay,
-    config: { damping: 12 },
+    config: { damping: 14 },
   });
 
   const opacity = interpolate(frame - delay, [0, 20], [0, 1], {
@@ -59,16 +55,24 @@ const StatItem = ({
   });
 
   return (
-    <div style={{ transform: `scale(${scale})`, opacity }}>
+    <div
+      style={{
+        transform: `scale(${scale})`,
+        opacity,
+        height: "100%",
+        ...style,
+      }}
+    >
       <HolographicCard
-        width={width}
-        height={140}
+        width="100%"
+        height="100%"
         color={color}
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          padding: 24,
         }}
       >
         <NeonText
@@ -79,16 +83,17 @@ const StatItem = ({
           style={{
             opacity: 0.8,
             textTransform: "uppercase",
-            letterSpacing: "2px",
-            marginBottom: 10,
+            letterSpacing: "1px",
           }}
         />
-        <NeonText
-          text={value}
-          size={42}
-          color={color}
-          style={{ textShadow: `0 0 20px ${color}` }}
-        />
+        <div style={{ alignSelf: "flex-end", marginTop: 10 }}>
+          <NeonText
+            text={value}
+            size={36}
+            color={color}
+            style={{ textShadow: `0 0 15px ${color}` }}
+          />
+        </div>
       </HolographicCard>
     </div>
   );
@@ -96,16 +101,23 @@ const StatItem = ({
 
 export const StatsScene: React.FC = () => {
   const frame = useCurrentFrame();
-  const { width, height } = useVideoConfig();
+  const { width } = useVideoConfig();
 
-  // Gentle zoom out for background feel
-  const bgScale = interpolate(frame, [0, 300], [1, 1.2]);
+  // Background animation
+  const bgScale = interpolate(frame, [0, 300], [1, 1.1]);
 
-  // Title Animation
-  const titleOpacity = interpolate(frame, [0, 30], [0, 1]);
-  const titleY = interpolate(frame, [0, 30], [50, 0], {
+  // Entrance
+  const contentOpacity = interpolate(frame, [10, 40], [0, 1]);
+  const contentY = interpolate(frame, [10, 40], [20, 0], {
     extrapolateRight: "clamp",
   });
+
+  // Safe checks
+  const weeks = (stats as any).contributionCalendar?.weeks || [];
+  const totalContribs =
+    (stats as any).totalContribs ||
+    (stats as any).contributionCalendar?.totalContributions ||
+    0;
 
   return (
     <AbsoluteFill
@@ -113,151 +125,203 @@ export const StatsScene: React.FC = () => {
         backgroundColor: defaultTheme.colors.background,
         fontFamily: "'Orbitron', 'Inter', sans-serif",
         overflow: "hidden",
+        color: "white",
       }}
     >
+      {/* Background Layer */}
       <AbsoluteFill style={{ transform: `scale(${bgScale})`, zIndex: 0 }}>
         <ParticleBackground theme={defaultTheme} />
       </AbsoluteFill>
 
-      {/* Main Content Container */}
-      <AbsoluteFill style={{ padding: 40, zIndex: 10 }}>
-        {/* Header Section */}
+      {/* Main Container */}
+      <AbsoluteFill
+        style={{
+          padding: 40,
+          zIndex: 10,
+          opacity: contentOpacity,
+          transform: `translateY(${contentY}px)`,
+        }}
+      >
+        {/* Header */}
         <div
           style={{
-            opacity: titleOpacity,
-            transform: `translateY(${titleY}px)`,
-            textAlign: "center",
-            marginBottom: 40,
+            marginBottom: 30,
+            display: "flex",
+            alignItems: "center",
+            gap: 20,
           }}
         >
-          <NeonText
-            text={stats.username}
-            size={64}
-            color={defaultTheme.colors.primary}
-            style={{ marginBottom: 10 }}
-          />
-          <NeonText
-            text="PREMIUM GITHUB ANALYTICS"
-            size={18}
-            color={defaultTheme.colors.secondary}
-            style={{ letterSpacing: "0.3em", opacity: 0.8 }}
-            glow={false}
-          />
+          {/* Avatar Area */}
+          <div
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: "50%",
+              overflow: "hidden",
+              border: `2px solid ${defaultTheme.colors.primary}`,
+              boxShadow: `0 0 15px ${defaultTheme.colors.primary}`,
+              background: "#000",
+            }}
+          >
+            {(stats as any).avatar && (
+              <img
+                src={(stats as any).avatar}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                alt="avatar"
+              />
+            )}
+          </div>
+
+          <div>
+            <NeonText
+              text={stats.name || stats.username}
+              size={32}
+              color={defaultTheme.colors.primary}
+            />
+            <NeonText
+              text={`@${stats.username} • Premium Stats`}
+              size={14}
+              color={defaultTheme.colors.textSecondary}
+              glow={false}
+              style={{ marginTop: 5, letterSpacing: "1px" }}
+            />
+          </div>
         </div>
 
-        {/* Dashboard Grid */}
+        {/* Bento Grid Layout - CSS Grid */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 30,
-            height: "100%",
-            alignContent: "start",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gridTemplateRows: "repeat(2, 210px)",
+            gap: 24,
+            width: "100%",
           }}
         >
-          {/* Left Column: Stats */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <StatItem
+          {/* Row 1, Col 1-3: Heatmap (Wide) */}
+          <div style={{ gridColumn: "span 3", position: "relative" }}>
+            <div
+              style={{
+                height: "100%",
+                transform: `scale(${spring({ fps: 30, frame: frame - 10, config: { damping: 15 } })})`,
+                opacity: interpolate(frame - 10, [0, 20], [0, 1]),
+              }}
+            >
+              <HolographicCard
+                width="100%"
+                height="100%"
+                color={defaultTheme.colors.success}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 15,
+                  }}
+                >
+                  <NeonText
+                    text="CONTRIBUTION ACTIVITY"
+                    size={14}
+                    color={defaultTheme.colors.success}
+                    glow={false}
+                  />
+                  <NeonText
+                    text={`${totalContribs} Total`}
+                    size={14}
+                    color={defaultTheme.colors.success}
+                    glow={false}
+                  />
+                </div>
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    overflow: "hidden",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Heatmap
+                    weeks={weeks}
+                    width={780}
+                    height={130}
+                    color={defaultTheme.colors.success}
+                  />
+                </div>
+              </HolographicCard>
+            </div>
+          </div>
+
+          {/* Row 1, Col 4: Total Commits */}
+          <div style={{ gridColumn: "span 1" }}>
+            <StatBox
               title="Commits"
               value={stats.totalCommits}
               delay={20}
               color={defaultTheme.colors.primary}
             />
-            <StatItem
-              title="PRs"
-              value={stats.totalPRs}
+          </div>
+
+          {/* Row 2, Col 1: PRs & Issues */}
+          <div style={{ gridColumn: "span 1" }}>
+            <StatBox
+              title="PRs & Issues"
+              value={`${stats.totalPRs + stats.totalIssues}`}
               delay={25}
-              color={defaultTheme.colors.success}
-            />
-            <StatItem
-              title="Issues"
-              value={stats.totalIssues}
-              delay={30}
-              color={defaultTheme.colors.error}
-            />
-          </div>
-
-          {/* Center Column: Radar Chart */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              height: 480,
-            }}
-          >
-            <HolographicCard
-              width={400}
-              height={460}
-              color={defaultTheme.colors.secondary}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  top: 20,
-                  left: 0,
-                  right: 0,
-                  textAlign: "center",
-                }}
-              >
-                <NeonText
-                  text="TOP LANGUAGES"
-                  size={16}
-                  color={defaultTheme.colors.secondary}
-                />
-              </div>
-              <RadarChart
-                data={radarData}
-                width={300}
-                height={300}
-                color={defaultTheme.colors.secondary}
-              />
-            </HolographicCard>
-          </div>
-
-          {/* Right Column: Activity Graph & Extra Stats */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <StatItem
-              title="Contributions"
-              value={stats.totalContribs}
-              delay={35}
               color={defaultTheme.colors.accent}
             />
+          </div>
 
-            {/* Activity Graph Card */}
-            <div style={{ flex: 1 }}>
+          {/* Row 2, Col 2-3: Radar Chart (Skills) */}
+          <div style={{ gridColumn: "span 2", position: "relative" }}>
+            <div
+              style={{
+                height: "100%",
+                transform: `scale(${spring({ fps: 30, frame: frame - 30, config: { damping: 15 } })})`,
+                opacity: interpolate(frame - 30, [0, 20], [0, 1]),
+              }}
+            >
               <HolographicCard
-                width={240}
-                height={280}
-                color={defaultTheme.colors.primary}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  paddingBottom: 0,
-                }}
+                width="100%"
+                height="100%"
+                color={defaultTheme.colors.secondary}
               >
-                <div style={{ marginBottom: 20 }}>
+                <div style={{ position: "absolute", top: 20, left: 20 }}>
                   <NeonText
-                    text="ACTIVITY"
-                    size={16}
-                    color={defaultTheme.colors.primary}
+                    text="SKILLS RADAR"
+                    size={14}
+                    color={defaultTheme.colors.secondary}
+                    glow={false}
                   />
                 </div>
-                <ActivityGraph
-                  data={activityData}
-                  width={200}
-                  height={150}
-                  color={defaultTheme.colors.primary}
-                />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%",
+                  }}
+                >
+                  <RadarChart
+                    data={radarData}
+                    width={220}
+                    height={220}
+                    color={defaultTheme.colors.secondary}
+                  />
+                </div>
               </HolographicCard>
             </div>
+          </div>
+
+          {/* Row 2, Col 4: Stars/Repos */}
+          <div style={{ gridColumn: "span 1" }}>
+            <StatBox
+              title="Repositories"
+              value={stats.repos}
+              delay={35}
+              color={defaultTheme.colors.error} // Different color for variety
+            />
           </div>
         </div>
       </AbsoluteFill>

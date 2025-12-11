@@ -1,15 +1,31 @@
 {
   "username": "AshrafMorningstar",
   "name": "Ashraf Morningstar",
+  "avatar": "https://avatars.githubusercontent.com/u/123456?v=4",
   "totalCommits": 1250,
-  "totalPRs": 45,
-  "totalIssues": 32,
-  "totalContribs": 2500,
-  "repos": 28,
-  "stars": 150,
+  "totalPRs": 85,
+  "totalIssues": 42,
+  "totalContribs": 3650,
+  "repos": 25,
+  "stars": 120,
+  "followers": 50,
+  "topLanguages": [
+    { "name": "TypeScript", "value": 60, "color": "#3178c6" },
+    { "name": "React", "value": 30, "color": "#61dafb" },
+    { "name": "Python", "value": 20, "color": "#3572a5" },
+    { "name": "Rust", "value": 15, "color": "#dea584" },
+    { "name": "Go", "value": 10, "color": "#00add8" }
+  ],
   "languages": [
     { "name": "TypeScript", "value": 60, "color": "#3178c6" },
-    { "name": "JavaScript", "value": 30, "color": "#f1e05a" },
-    { "name": "Python", "value": 10, "color": "#3572A5" }
-  ]
+    { "name": "React", "value": 30, "color": "#61dafb" },
+    { "name": "Python", "value": 20, "color": "#3572a5" },
+    { "name": "Rust", "value": 15, "color": "#dea584" },
+    { "name": "Go", "value": 10, "color": "#00add8" }
+  ],
+  "contributionCalendar": {
+    "totalContributions": 3650,
+    "weeks": []
+  },
+  "_credits": "Created by AshrafMorningstar - https://github.com/AshrafMorningstar"
 }

@@ -161,7 +161,14 @@ async function fetchStats() {
       ],
       contributionCalendar: {
         totalContributions: 3650,
-        weeks: [], // Empty for mock to save space
+        weeks: Array.from({ length: 53 }).map(() => ({
+          contributionDays: Array.from({ length: 7 }).map(() => ({
+            contributionCount:
+              Math.random() > 0.5 ? Math.floor(Math.random() * 10) : 0,
+            date: new Date().toISOString(),
+            color: "#216e39",
+          })),
+        })),
       },
       _credits:
         "Created by AshrafMorningstar - https://github.com/AshrafMorningstar",
