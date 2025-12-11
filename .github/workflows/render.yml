@@ -22,24 +22,27 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-
-      - name: Install Dependencies
-        run: npm ci
+          node-version: "20"
+          cache: "npm"
 
       - name: Install FFmpeg
-        uses: FedericoCarboni/setup-ffmpeg@v2
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
-      - name: Fetch Global Stats
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch data
+        run: npm run fetch
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run fetch || echo "Using cached/mock data if fetch fails"
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Render Video
-        run: npm run render
+      - name: Render GIF
+        run: npm run render:gif
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: stats-video
-          path: out/stats.mp4
+      - name: Commit and Push output
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add out/stats.gif src/data/stats.json
+          git commit -m "chore: Auto-update cinematic stats [skip ci]" || exit 0
+          git push
