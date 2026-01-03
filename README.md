@@ -1,97 +1,83 @@
-/*
- Copyright (c) 2026 Ashraf Morningstar
- These are personal recreations of existing projects, developed by Ashraf Morningstar
- for learning and skill development.
- Original project concepts remain the intellectual property of their respective creators.
- Repository: https://github.com/AshrafMorningstar
-*/
 
-# 🎬 Cinematic GitHub Stats - Premium Edition
+<div align="center">
 
-[![Render Video](https://github.com/AshrafMorningstar/cinematic-github-stats/actions/workflows/render.yml/badge.svg)](https://github.com/AshrafMorningstar/cinematic-github-stats/actions/workflows/render.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-0affff.svg)](https://opensource.org/licenses/MIT)
-[![Remotion](https://img.shields.io/badge/Made%20with-Remotion-ff00ff)](https://www.remotion.dev/)
+# :star: Cinematic Github Stats :star:
 
-> **The Ultimate Holographic GitHub Analytics Experience.**
+[![GitHub stars](https://img.shields.io/github/stars/AshrafMorningstar/cinematic-github-stats?style=for-the-badge&color=orange)](https://github.com/AshrafMorningstar/cinematic-github-stats/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/AshrafMorningstar/cinematic-github-stats?style=for-the-badge&color=blue)](https://github.com/AshrafMorningstar/cinematic-github-stats/network/members)
+[![GitHub issues](https://img.shields.io/github/issues/AshrafMorningstar/cinematic-github-stats?style=for-the-badge&color=red)](https://github.com/AshrafMorningstar/cinematic-github-stats/issues)
+[![GitHub license](https://img.shields.io/github/license/AshrafMorningstar/cinematic-github-stats?style=for-the-badge&color=green)](./LICENSE)
+![Maintained](https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg?style=for-the-badge)
 
-Turn your GitHub activity into a stunning, high-quality **Cyberpunk/Holographic** video. Featuring advanced data visualization, neon typography, and cinematic particle effects.
+**Automated, High-Performance cinematic github stats Project**
 
-![Preview](out/stats.gif)
+[View Demo (If Applicable)](#) • [Report Bug](https://github.com/AshrafMorningstar/cinematic-github-stats/issues) • [Request Feature](https://github.com/AshrafMorningstar/cinematic-github-stats/issues)
 
-## ✨ Premium Features
+</div>
 
-- **🔮 Holographic UI**: Next-gen glassmorphism with scanlines, chromatic aberration, and neon glows.
-- **📊 Advanced Data Viz**:
-  - **Radar Charts**: Visualize your top languages in a sci-fi radar view.
-  - **Isometric Activity Graphs**: See your contribution history in 3D.
-- **⚡ Cyberpunk Aesthetics**:
-  - **Neon Typography**: Glowing text effects using the `Orbitron` font.
-  - **Warp Speed Particles**: Dynamic background systems that react to the theme.
-- **🎨 Multiple Themes**:
-  - `Holographic` (Default): Neon Cyan & Magenta
-  - `Cyberpunk`: Pink & Cyan
-  - `Neon`: Violet & Fuchsia
-  - `Professional`: Clean Blue & Zinc
+---
 
-## 🚀 Quick Start
+## :rocket: Overview
 
-### 1. Create Repository
+**cinematic-github-stats** is a state-of-the-art implementation utilizing Node.js, React, TypeScript. Designed for developers looking for robust, scalable solutions in Open Source, Developer Tools, Coding Best Practices, Software Engineering, React.js, Hooks, Components, Virtual DOM, SPA, Frontend Architecture, Open Source, Developer Tools, Coding Best Practices, Software Engineering.
 
-Click [Use this template](https://github.com/new?template_name=cinematic-github-stats&template_owner=AshrafMorningstar) or create a new repo.
+This project is a high-performance, open-source solution designed for developers and enthusiasts. It implements modern best practices and is optimized for efficiency and scalability.
 
-### 2. Configure Secrets
+## :sparkles: Key Features
 
-Go to **Settings > Secrets > Actions** and add `GH_TOKEN` (Your Personal Access Token).
+- :white_check_mark: **High Performance:** Optimized for speed and low latency.
+- :white_check_mark: **Scalable Architecture:** Built to handle growth effortlessly.
+- :white_check_mark: **Modern Tech Stack:** Utilizes latest standards in Node.js, React, TypeScript.
+- :white_check_mark: **Developer Friendly:** Clean code, well-documented, and easy to extend.
 
-### 3. Run Locally
+## :hammer_and_wrench: Technologies Used
 
-```bash
-npm install
-npm start
+![](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white) ![](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) ![](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+
+## :floppy_disk: Installation & Usage
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/AshrafMorningstar/cinematic-github-stats.git
+   cd cinematic-github-stats
+   ```
+
+2. **Install dependencies:**
+    npm install
+
+3. **Run the application:**
+    npm start
+
+## :open_file_folder: Project Structure
+
+```
+cinematic-github-stats/
+├── src/          # Source code
+├── assets/       # Images and static files
+├── README.md     # Project documentation
+└── LICENSE       # License information
 ```
 
-## 🛠 Configuration
+## :handshake: Contributing
 
-Edit `.env` or `src/config/themes.ts`:
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-```typescript
-// Select your theme
-export const defaultTheme = themes.holographic;
-```
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 
-## 📦 Tech Stack
+## :bust_in_silhouette: Author
 
-- **Framework**: [Remotion](https://www.remotion.dev/)
-- **Styling**: React, CSS Modules
-- **Charts**: D3.js (d3-shape, d3-scale)
-- **Icons**: Lucide React
+**Ashraf Morningstar**
 
----
+- **GitHub:** [@AshrafMorningstar](https://github.com/AshrafMorningstar)
+- **Twitter:** [@AMS_Morningstar](https://twitter.com/@AMS_Morningstar)
+- **Portfolio:** [AshrafMorningstar Projects](https://github.com/AshrafMorningstar?tab=repositories)
 
-**Created by [AshrafMorningstar](https://github.com/AshrafMorningstar)** 🌟
+## :page_facing_up: License
 
+Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
-
-## 📜 Copyright & License
-
-© 2026 Ashraf Morningstar. All Rights Reserved.
-
-**Educational Disclaimer:** This is a personal recreation of an existing project concept, developed for learning and skill development purposes. The original project concept remains the intellectual property of its respective creator(s).
-
-**License:** MIT License - See [LICENSE](./LICENSE) file for details.
-
-**Developer:** [Ashraf Morningstar](https://github.com/AshrafMorningstar)
-
-**Portfolio:** Explore more projects at [github.com/AshrafMorningstar](https://github.com/AshrafMorningstar)
-
----
-
-### 🤝 Connect & Contribute
-
-Found this helpful? Give it a ⭐️ on GitHub!
-
-- 💼 Company: MORNINGSTARCONSTRUCTION
-- 📍 Location: India
-- 🐦 Twitter: [@AMS_Morningstar](https://twitter.com/AMS_Morningstar)
-- 📧 Email: ashrafmorningstar@gmail.com
+<div align="center">
+  <p>If you find this project useful, please give it a <b>Star</b> :star:!</p>
+  <sub>Built with ❤️ by Ashraf Morningstar</sub>
+</div>
